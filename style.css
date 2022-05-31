@@ -1,0 +1,733 @@
+/*---------GERAL-------------------------------------------------------------------------*/
+*{
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box; /*o tamanho da caixa é definido a partir da bordar e não do conteúdo*/
+ }
+
+:root {
+  --hue: 250;
+  --primary-color: hsl(var(--hue), 100%, 26%);  /* --primary-color variavel em css, foi criada, h - matriz, s saturation, l - luz*/  
+  --headline: hsl(210, 11%, 15%);
+  --paragraph: hsl(210, 9%, 31%);
+  --brand-beige: hsl(39, 100%, 97%);
+  --brand-light: hsl(calc(var(--hue) - 22), 23%, 89%);
+  --brand-light-2: hsl(calc(var(--hue) + 10), 14%, 97%);
+  --bg-light: hsl(180, 14%, 97%);
+  --nav-height: 7.2rem;
+  --brand-green-hover: hsl(var(--hue), 100%, 14%);
+font-size: 62.5%; /* (10*100)/16 Com este valor um 1rem equivale a 10pixel por causa dessa formula*/ 
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'DM Sans';
+  font-size: 1.6rem;
+  text-align: center;
+  overflow: overlay; /*Faz com que a barra de rolagem e os elementos sobrepoam o documento, e não faz com que as medidas sejam somadasno body  */
+  background-color: var(--bg-light);
+}
+
+.wrapper{ /*usada para padronizar tamanho ou seja utilizar sempre a mesma medida*/
+  width: min(50rem, 100%); /*ele sempre vai ver o menor valor entre os dois, resumindo se o dispositivo for maior que 50rem e ele limita a caixa a 50rem, caso seja menor que os 50rem e ele expande o conteúdo a 100% do body, do disponível, ajusta automaticamente as quebras do conteúdo*/
+  margin-inline: auto;
+  padding-inline: 2.4rem; /*padding somente na esquerda e direita*/
+}
+
+ul{ /*remove os estilo de todas as listas*/
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+section{
+  padding-block: 10rem; /*padding em cima e em baixo*/
+}
+
+section header h4{
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  margin-bottom: 1.6rem;
+  letter-spacing: 0.08em;
+  line-height: 150%;
+}
+
+section header h2{
+  font-size: 3rem;
+  line-height: 3.9rem;
+  color: var(--headline);
+}
+
+section header h1{
+  font-size: 3.4rem;
+  color: var(--headline);
+  line-height: 130%;
+  margin-bottom: 2.4rem;
+}
+
+section .content p {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--paragraph);
+}
+
+.button {
+ padding: 1.6rem 3.2rem;
+ width:fit-content;
+  background: var(--primary-color); /* var() função valor que recebe a variavel definida no root*/ 
+  border: none;
+  border-radius: 4rem;
+  margin-bottom: 6rem;
+  font-size: 1.4rem;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex; /*Elmentos internos filhos resetam o alinhamento coloca lado ao lado, destrava opçãoes de alinhamento*/
+  /*display flex coloca o elemento por fora como block então é preciso definir as margem dele externas como */
+  align-items: center; /*Alinha os itens filhos na horizontal do elementos*/
+  justify-content: center; /*Justifica o conteudo filhos, centralizando dentro da caixa*/
+  gap: 1.6rem;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: var(--brand-green-hover);
+  transition: background 200ms;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.2rem;
+}
+
+/*--------CUSTOM COLORS-------------------------------------------------------------*/
+
+#services .card circle {
+  fill: var(--brand-light);
+}
+
+#navigation .logo path[fill*="#00856F"],
+#backToTopButton circle {
+  fill: var(--primary-color);
+}
+
+#contact li path,
+#navigation button.open-menu path[stroke*="#00856F"] {
+  stroke: var(--primary-color);
+}
+body.menu-expanded #navigation .logo path,
+#navigation.scroll .logo path{
+  fill: white;
+}
+
+#navigation.scroll button.open-menu path[stroke*="#00856F"]{
+  stroke: white;
+}
+
+/*---------NAVIGATION----------------------------------------------------------------------*/
+
+nav{
+  display: flex;
+  background-color: var(--brand-light);
+  /*padding-inline: 2.4rem; padding para laterais*/
+  /*padding-block: 1.6rem; padding para topo e baixo*/
+  /*padding: 1.6rem 2.4rem; atalho para as duas linhas acima*/
+  height: var(--nav-height);
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100vw;
+}
+
+nav .wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+nav.scroll {
+  background-color: var(--primary-color);
+}
+
+
+nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+nav .menu,
+nav .close-menu {
+  position: fixed;
+}
+
+
+/*--------MENU-EXPANDED-------------------------------------------------------------*/
+body.menu-expanded{
+  overflow: hidden;  /*Tirando o scroll da janela quando a class manu-expanded estiver acionadada*/
+}
+
+body.menu-expanded > :not(nav) { /* > pega todo os filhos do primeiro nível :not(nav) - o nav */
+visibility: hidden;
+}
+
+.menu,
+.close-menu,
+body.menu-expanded .open-menu {
+  opacity: 0;
+  visibility: hidden;
+}
+
+body.menu-expanded .menu,
+body.menu-expanded .close-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu{
+  transform: translateY(100%); /*jogando o menu para fora da tela antes do expended ser adicionado*/
+}
+
+body.menu-expanded .menu{
+  top: 0;
+  left: 0;
+  background-color: var(--primary-color);
+  width: 100vw;
+  height: 100vh;
+
+  padding-top: var(--nav-height);
+
+  transition: transform 300ms;
+  transform: translateY(0);
+
+}
+
+
+.menu ul:nth-child(1) {
+display: flex;
+flex-direction: column;
+gap: 4.8rem;
+margin-top: 6rem;
+font-weight: 700;
+font-size: 2.4rem;
+line-height: 3.1rem;
+}
+
+.menu ul li a {
+  color:var(--brand-beige);
+  text-decoration: none;
+}
+
+.menu .button{
+  background: #FFFFFF;
+border-radius: 4rem;
+color: var(--primary-color);
+font-size: 1.8rem;
+line-height: 2.3rem;
+text-transform: uppercase;
+font-weight: 700;
+text-decoration: none;
+
+display: inline-block; /*inline não aceita alguns parametros LARGURA ALTURA TBM NÃO FUNCIONA, com o inline block pode fazer tudo isso*/
+padding: 16px 32px;
+margin-top: 4.8rem;
+margin-bottom: 8rem;
+}
+
+.menu .button:hover{
+  color: white;
+  background-color: var(--primary-color);
+  filter: brightness(1.1);
+}
+
+body.menu-expanded .logo,
+body.menu-expanded  button{
+  position: relative;
+  z-index: 100;
+}
+
+body.menu-expanded .logo path {
+  fill: white;
+}
+
+body.menu-expanded button path {
+  stroke: white;
+}
+
+
+
+/*---------HEADER------------------------------------------------------------------------*/
+#home {
+  padding-block: 0;
+  padding-top: calc(4.1rem + var(--nav-height)); /*a margin é calculado de acordo com um valor padrão + um valor definido em um variaveil ou passado */
+}
+
+#home::before{ /*pseudo element - antes de todo conteúdo do header poderia ser criado no html tbm*/
+  content: '';
+  width: 100%; /*100 view port de largura, vai pegar os 100 pedacinhos, ou seja a tela é dividida nesse calculo e ele pega toda a horizonta*/
+  height: calc(76% + var(--nav-height)) ;
+  background-color: var(--brand-light);
+  display: block; /*display inline não aceita width e heigth*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /*Todos os elementos compartilham inicialmente do mesmo index o valor 0*/
+}
+
+#home p{
+  font-size: 1.8rem;
+  color: var(--paragraph);
+  font-weight: 400;
+  line-height: 150%;
+  margin-bottom: 3.2rem;
+}
+
+#home .button {
+  margin-inline: auto;
+}
+
+#home img {
+  width: 26.4rem;
+  display: block;
+  margin-inline: auto;
+  object-position: 0 2rem;
+}
+
+#home .numbers{
+  width: 100%;
+  border-radius:6px;
+  padding-block: 4rem; /*Ajusta o padding  no eixo x vertical em cima e embaixo*/
+  background-color: var(--brand-beige);
+  border: 1px solid var(--brand-light);
+  box-shadow: 0px 4px 4px rgba(0,0,0, 0.25);
+  margin-inline: auto; /*Ajusta a Margin no eixo x horizontal*/
+  display: flex;
+  flex-direction: column ; /*Flex Column alias o itens no eixo vertical*/
+  gap: 6rem;
+  padding-top: 4rem;
+}
+
+#home .number h3{
+  color: var(--headline);
+  font-size: 4.8rem;
+  line-height: 130%;
+  margin-bottom: 0.4rem;
+}
+
+#home .number p {
+  margin: 0;
+  color: var(--primary-color);
+  line-height: 130%;
+}
+
+/*--------SERVICES-------------------------------------------------------------*/
+#services header h2 {
+  margin-bottom: 6rem;
+}
+
+#services .cards{ /*Elmento pai onde tem que ser definio o display para destravar as opções de alinhamento*/
+display: flex;
+flex-direction: column;
+gap: 3.2rem;
+}
+
+#services .card {
+padding: 2.4rem;
+text-align: left;
+border: 1px solid var(--brand-light);
+border-radius:.6rem;
+background-color: white;
+}
+
+#services .card h3 {
+  margin-block: 1.6rem;
+}
+
+
+
+
+/*--------ABOUT-------------------------------------------------------------*/
+#about {
+  text-align: left;
+  background-color: var(--brand-beige);
+}
+
+#about header h2 {
+  margin-bottom: 2.4rem;
+}
+
+#about .content p{
+  margin-top: 2.4rem;
+  margin-bottom: 6rem;
+}
+
+/*---------CONTATCT----------------------------------------------------------------------*/
+#contact { /*Alinhando tudo a esquerda*/
+  text-align: left;
+}
+
+#contact header { /*margim de baixo do cabeçalho para o conteudo*/
+  margin-bottom: 3.2rem;
+}
+
+#contact ul { /*Alinhado os conteudo da lista no centro verticalmente e dando um espaço uniforme entre eles*/
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  margin-bottom: 3.2rem;
+}
+
+#contact ul li {
+display: flex;
+align-items: center;
+gap: 1.6rem;
+
+}
+
+/*---------FOOTER----------------------------------------------------------------------*/
+
+footer{
+  background-color: var(--primary-color);
+  padding-block: 6rem;
+  text-align: left;
+  color: white;
+}
+
+footer .logo { /*a tag a tem display inline e não aceita top e botom, não aceita widht e higth tem que transofmar em inline-block pois por padrão a display inline não aceiar algumas atributos e valores ele mantem a propriedade em linha e adiciona e faz como haja como block como o margim -botom*/
+  display: inline-block;
+  margin-bottom: 2.4rem;
+}
+
+footer .logo svg {
+  width: 23.6rem;
+  height: 3.1rem;
+}
+
+footer .logo path {
+fill: white;
+}
+
+footer p {
+  color: var(--bg-light);
+  line-height: 2;
+  margin-bottom: 3.2rem;
+}
+
+footer .social-links { 
+  justify-content: flex-start; /*alinhado no inicio da grade*/
+}
+
+/*---------BACK TO TOP----------------------------------------------------------------------*/
+#backToTopButton {
+  position: fixed;
+  bottom: 1rem;
+  right: 2.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: 200ms;
+}
+
+#backToTopButton.show {
+  transform: translateY(0);
+opacity: 1;
+visibility: visible;
+}
+
+#backToTopButton.showOnFooter {
+  filter: brightness(1.4);
+}
+
+/*---------RESPONSIVO----------------------------------------------------------------------*/
+
+@media (min-width: 1024px) { /*Quando o dispositivo tiver 1024px pra cima será aplicado tudo que estiver entre as chaves a seguir ou seja analise se o layout estive maior que 1024px at media rules serão aplicada*/
+
+/*---------GERAL----------------------------------------------------------------------*/
+body {
+  overflow: auto; /*removendo a sobreposição de elmentos do navegados ele passam a soma no espaço dapagina*/
+}
+
+.wrapper {
+  width: min(112rem, 100%);
+  display: grid;
+}
+
+.col-a {
+  grid-area: A;
+}
+
+.col-b {
+  grid-area: B;
+}
+
+section{
+  padding-block: 16rem;
+}
+
+section header h2 {
+  font-size: 4rem;
+  line-height: 5.2rem;
+}
+
+/*---------NAVIGATION----------------------------------------------------------------------*/
+nav#navigation .wrapper * { /*reset para voltar tudo como o navegador padrão exibiria*/
+  margin: 0;
+  padding: 0;
+  visibility: initial;
+  display: initial;
+  opacity: initial;
+  flex-direction: initial;
+  position: initial;
+  font-size: initial;
+  transform: initial;
+  color: initial;
+  background-color: initial;
+  font-weight: initial;
+  text-transform: initial;
+  filter: initial;
+  gap: initial;
+
+}
+
+nav#navigation .close-menu, /*usar expecifidade para aplicar a nova declaração*/
+nav#navigation .open-menu,
+nav#navigation .social-links {
+  display: none;
+}
+
+nav#navigation .menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 60%;
+}
+
+nav#navigation .menu ul:nth-child(1) {
+  display: flex;
+  gap: 3.2rem;
+}
+
+nav#navigation .menu ul li a {
+
+  color: var(--primary-color);
+  opacity: 0.9;
+
+}
+
+nav#navigation .menu a.button { 
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 1rem 2.4rem;
+/* Primary Colors/brand-green */
+
+border: 1px solid var(--primary-color);
+border-radius: 4rem;
+
+color: var(--primary-color);
+font-weight: 700;
+font-size: 1.4rem;
+line-height: 1.8rem;
+text-transform: uppercase;
+}
+
+nav#navigation .menu a.button.active,
+nav#navigation .menu a.button:hover { 
+  background-color: var(--primary-color);
+  color: white;
+  transition: background .4s;
+  border:none;
+  }
+
+nav#navigation.scroll .menu li a {
+color: var(--brand-light-2);
+opacity: 0.6;
+}
+
+nav#navigation.scroll .menu a.button {
+  border-color: white;
+  color: white;
+} 
+
+nav#navigation .menu li a {
+transition: opacity .4s;
+}
+
+nav#navigation .menu li a.active,
+nav#navigation .menu li a:hover{
+  opacity: 1;
+  font-weight: 700;
+}
+
+nav#navigation .menu li a::after{
+  content: '';
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  display: block;
+  position: relative;
+  bottom: -2rem;
+  left: -0.5rem;
+  transition: width 0.2s;
+
+}
+
+nav#navigation.scroll .menu li a::after {
+  background-color: white;
+}
+
+nav#navigation .menu li a.active::after,
+nav#navigation .menu li a:hover::after {
+  padding-inline: 0.8rem;
+  width: 100%;
+} 
+nav#navigation.scroll .menu li a.active,
+nav#navigation.scroll .menu li a:hover {
+  opacity: 1;
+}
+
+nav#navigation.scroll .menu a.button.active,
+nav#navigation.scroll .menu a.button:hover {
+  background-color: var(--primary-color);
+  filter: brightness(1.3);
+  border: none;
+}
+
+/*-------------------------------HOME--------------------------*/
+
+#home::before {
+  height: calc(96% - var(--nav-height));
+}
+
+#home {
+  padding-top: var(--nav-height);
+}
+
+#home .wrapper {
+  grid-template-columns: 60.5rem 1fr; /*definindo o tamanho das colounas no grid a primeira com tamanho fixo e a segunda pe o espaço restante e ajuda*/
+  grid-template-areas: /*permite organizar e montar o layout que será obedecido pelas colunas no grid*/
+  'A B'
+  'C C';
+}
+
+#home .col-a { /*especifico da coluna a no #home*/
+  text-align: left;
+  align-self: center;
+}
+
+#home .numbers {
+  grid-area: C;
+  flex-direction: row;
+  padding: 6rem;
+  gap:0;
+}
+
+#home h1{
+  font-size: 5.2rem;
+}
+
+#home .content p {
+font-size: 1.8rem;
+}
+
+#home .numbers .number { /* igual o tamanho dos elementos */
+  flex: 1;
+}
+
+#home .numbers .number + .number { /*Colocar bordar entre elementos do meio utilizando a técnica de pega os elementos que tem elementos antes deles mesmo ou seja o elemento que não tem elemento anterior não aplica a propriedaade*/
+  border-left: 1px solid var(--primary-color);
+}
+
+#home .button {
+  margin: 0;
+}
+
+#home img {
+width: 42rem;
+}
+
+/*-------------------------------SERVICES--------------------------*/
+
+#services h2 {
+  width: 47rem;
+  margin-inline: auto;
+}
+
+#services .cards {
+  flex-direction: row;
+  flex-wrap: wrap; /*tenta encaixar o card ai mas respeita o tamanho dele*/
+  gap: 4rem;
+}
+
+#services .card {
+  width: 30%;
+  flex-grow: 1; /*preenche os espaço ajutando os elementos para crescer e preencher o espaco disponivel*/
+}
+
+/*-------------------------------ABOUT--------------------------*/
+
+#about .wrapper {
+  grid-template-columns: 48rem 1fr;
+  grid-template-areas: 'B A'; /*Mudando o posicionamento das colunas*/
+  gap: 6.7rem;
+}
+
+#about .col-a{
+  align-self: center;
+}
+
+#about .content p {
+  margin-bottom:0;
+}
+
+/*-------------------------------CONTACT--------------------------*/
+
+#contact .wrapper {
+  grid-template-columns: 1fr 57.5rem;
+  grid-template-areas: 'A B';
+}
+
+#contact h2 {
+  width: 40.4rem;
+}
+
+/*-------------------------------FOOTER--------------------------*/
+
+footer .wrapper{
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'A B'; /*ordena colocas as colunas da forma que estrutura aqui ou seja o local de cadas*/
+}
+
+footer p {
+  margin-bottom: 0;
+}
+
+footer .col-a {
+  align-self: center;
+}
+
+footer .col-b {
+  align-self: center;
+  justify-self: flex-end;
+}
+
+}
+
